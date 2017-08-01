@@ -100,6 +100,9 @@ public:
      *  Деструктор
      */
     ~fraction (void) {}
+    /*
+     * Возвращает НОД числителя и знаменателя
+     */
     int gcd ()
     {
         return gcd__(this->a, this->b);
@@ -126,7 +129,7 @@ public:
         return this->positive;
     }
     /*
-     *
+     *  Переводит Fraction в double
      */
     double toDouble()
     {
@@ -138,7 +141,7 @@ public:
      *  Выполняется только в том случае, если в основном файле
      *  подключена библиотека <iostream>
      */
-    #ifndef _IOSTREAM_
+    #if _GLIBCXX_IOSTREAM
         friend std::ostream& operator << (std::ostream &out, const fraction& my_fraction)
         {
             out << "Fraction(";
@@ -147,13 +150,13 @@ public:
             out << my_fraction.a << ", " << my_fraction.b << ")";
             return out;
         }
+        friend std::istream& operator >> (std::istream &in, fraction& my_fraction)
+        {
+            std::cin >> my_fraction.a >> my_fraction.b;
+            my_fraction.balance();
+            return in;
+        }
     #endif
-    friend std::istream& operator >> (std::istream &in, fraction& my_fraction)
-    {
-        std::cin >> my_fraction.a >> my_fraction.b;
-        my_fraction.balance();
-        return in;
-    }
     /*
      *  Присваевание
      */
@@ -192,14 +195,6 @@ public:
      */
     fraction operator + (const fraction& my_fraction)
     {
-        /*
-         *  Если числитель одной дроби равен нулю, то возвращаем другую дробь
-         */
-        if (a == 0)
-            return my_fraction;
-        if (my_fraction.a == 0)
-            return fraction(a, b);
-
         int a_new = getNumerator_after_Add_Or_Sub(*this, my_fraction, true);
 
         fraction tmp(a_new, b * my_fraction.b);
@@ -221,14 +216,6 @@ public:
      */
     fraction operator - (const fraction& my_fraction)
     {
-        /*
-         *  Если числитель одной дроби равен нулю, то возвращаем другую
-         */
-        if (a == 0)
-            return my_fraction;
-        if (my_fraction.a == 0)
-            return fraction(a, b);
-
         int a_new = getNumerator_after_Add_Or_Sub(*this, my_fraction, false);
 
         fraction tmp(a_new, b * my_fraction.b);
