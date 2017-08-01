@@ -300,6 +300,12 @@ public:
 
         return *this;
     }
+    fraction operator - ()
+    {
+        this->positive = !(this->positive);
+
+        return *this;
+    }
     /*
      *  Операторы сравнения
      */
