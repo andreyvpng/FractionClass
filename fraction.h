@@ -19,7 +19,8 @@
     ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <iostream>
+#ifndef _FRACTION_
+#define _FRACTION_
 #include <stdexcept>
 
 class fraction
@@ -133,15 +134,20 @@ public:
     }
     /*
      *  Перегрузка ввода/вывода
+     *
+     *  Выполняется только в том случае, если в основном файле
+     *  подключена библиотека <iostream>
      */
-    friend std::ostream& operator << (std::ostream &out, const fraction& my_fraction)
-    {
-        out << "Fraction(";
-        if(!my_fraction.positive)
-            out << "-";
-        out << my_fraction.a << ", " << my_fraction.b << ")";
-        return out;
-    }
+    #ifndef _IOSTREAM_
+        friend std::ostream& operator << (std::ostream &out, const fraction& my_fraction)
+        {
+            out << "Fraction(";
+            if(!my_fraction.positive)
+                out << "-";
+            out << my_fraction.a << ", " << my_fraction.b << ")";
+            return out;
+        }
+    #endif
     friend std::istream& operator >> (std::istream &in, fraction& my_fraction)
     {
         std::cin >> my_fraction.a >> my_fraction.b;
@@ -341,3 +347,4 @@ public:
         return !(*this < my_fraction);
     }
 };
+#endif /* _FRACTION_ */
