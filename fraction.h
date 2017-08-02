@@ -21,7 +21,6 @@
 
 #ifndef _FRACTION_
 #define _FRACTION_
-#include <stdexcept>
 
 class fraction
 {
@@ -39,17 +38,17 @@ private:
     {
         if(this->b == 0)
         {
-            throwZeroDivisionError();
+            throw "ZeroDivisionError!";
         }
         if(this->a < 0)
         {
-            this-> a = -(this->a);
+            this->a = -(this->a);
             this->positive = !(this->positive);
         }
 
         if(this->b < 0)
         {
-            this-> b = -(this->b);
+            this->b = -(this->b);
             this->positive = !(this->positive);
         }
 
@@ -57,10 +56,6 @@ private:
 
         this->a /= gcd_;
         this->b /= gcd_;
-    }
-    void throwZeroDivisionError ()
-    {
-        throw std::invalid_argument("ZeroDivisionError!");
     }
     /*
      *  Бинарный алгоритм вычисления НОД
@@ -119,7 +114,7 @@ public:
      */
     int get_denominator ()
     {
-        return this -> b;
+        return this->b;
     }
     /*
      *  Возвращает положительна ли дробь
@@ -140,8 +135,11 @@ public:
      *
      *  Выполняется только в том случае, если в основном файле
      *  подключена библиотека <iostream>
+     *
+     *  _GLIBCXX_IOSTREAM в MinGW
+     *  _IOSTREAM_        в MSCV
      */
-    #if _GLIBCXX_IOSTREAM
+    #if defined(_GLIBCXX_IOSTREAM) || defined(_IOSTREAM_)
         friend std::ostream& operator << (std::ostream &out, const fraction& my_fraction)
         {
             out << "Fraction(";
@@ -281,17 +279,31 @@ public:
      */
     fraction operator ++ ()
     {
-        this-> a += 1;
+        *this += fraction(1, 1);
         this->balance();
 
         return *this;
     }
+    fraction operator ++ (int)
+    {
+        *this += fraction(1, 1);
+        this->balance();
+
+        return *this - fraction(1, 1);
+    }
     fraction operator -- ()
     {
-        this-> a -= 1;
+        *this -= fraction(1, 1);
         this->balance();
 
         return *this;
+    }
+    fraction operator -- (int)
+    {
+        *this -= fraction(1, 1);
+        this->balance();
+
+        return *this + fraction(1, 1);
     }
     fraction operator - ()
     {
